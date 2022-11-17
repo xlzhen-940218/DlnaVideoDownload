@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+dependencies {
+
+    api 'org.fourthline.cling:cling-core:2.1.1'
+    api 'org.fourthline.cling:cling-support:2.1.1'
+    implementation files('libs/jetty-server-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-util-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-http-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-client-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-io-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-security-8.1.9.v20130131.jar')
+    implementation files('libs/jetty-servlet-8.1.9.v20130131.jar')
+    implementation files('libs/javax.servlet-3.0.0.v201103241009.jar')
+    implementation files('libs/jetty-continuation-8.1.9.v20130131.jar')
+}

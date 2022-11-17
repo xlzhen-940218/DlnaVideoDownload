@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">投屏视频下载器</string>
+    <string name="receiver_video_dlna">接收视频投屏中…</string>
+    <string name="downloaded_open">下载完成，点击打开</string>
+    <string name="request_permission">正在申请存储权限，请允许</string>
+    <string name="thank_opensource">\t感谢以下开源项目:\n
+        \t\t1.<a href="https://github.com/lingochamp/FileDownloader"><b>https://github.com/lingochamp/FileDownloader</b></a>\n
+        \t\t2.<a href="https://github.com/Jay-Goo/M3U8Downloader"><b>https://github.com/Jay-Goo/M3U8Downloader</b></a>\n
+        \t\t3.<a href="https://github.com/tanersener/mobile-ffmpeg"><b>https://github.com/tanersener/mobile-ffmpeg</b></a>\n\n</string>
+    <string name="support_content">支持常用的视频格式，例如mp4,mkv的投屏下载,还支持m3u8的下载以及下载完成后自动转换成mp4</string>
+</resources>

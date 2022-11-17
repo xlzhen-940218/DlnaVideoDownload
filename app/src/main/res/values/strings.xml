@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Dlna Video Download</string>
+    <string name="receiver_video_dlna">Receiver Video Mirror…</string>
+    <string name="downloaded_open">Download complete,click open video</string>
+    <string name="request_permission">Applying for storage permission, please allow</string>
+    <string name="thank_opensource">\tThanks for opensource:\n
+        \t\t1.<a href="https://github.com/lingochamp/FileDownloader"><b>https://github.com/lingochamp/FileDownloader</b></a>\n
+        \t\t2.<a href="https://github.com/Jay-Goo/M3U8Downloader"><b>https://github.com/Jay-Goo/M3U8Downloader</b></a>\n
+        \t\t3.<a href="https://github.com/tanersener/mobile-ffmpeg"><b>https://github.com/tanersener/mobile-ffmpeg</b></a>\n\n</string>
+    <string name="support_content">Supports commonly used video formats, such as mp4, mkv screencast download, also supports m3u8 download and automatically converts to mp4 after downloading</string>
+</resources>
