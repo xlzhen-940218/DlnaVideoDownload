@@ -4,14 +4,14 @@ plugins {
 
 android {
     namespace 'com.xlzhen.dlnavideodownload'
-    compileSdk 33
+    compileSdk 37
 
     defaultConfig {
         applicationId "com.xlzhen.dlnavideodownload"
         minSdk 24
-        targetSdk 33
-        versionCode 2
-        versionName "1.0.1"
+        targetSdk 37
+        versionCode 3
+        versionName "2.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,7 +26,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    packagingOptions {
+    packaging {
+        jniLibs {
+            useLegacyPackaging = false
+        }
         resources {
             excludes += ['META-INF/beans.xml']
         }
@@ -35,10 +38,12 @@ android {
 
 dependencies {
     implementation project(path: ':dlna')
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation 'com.google.android.material:material:1.7.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.appcompat:appcompat:1.8.0'
+    implementation 'com.google.android.material:material:1.14.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.2'
     implementation 'com.liulishuo.filedownloader:library:1.7.7'
     implementation 'com.github.Jay-Goo:M3U8Downloader:V1.0.8'
-    implementation 'com.arthenica:mobile-ffmpeg-min-gpl:4.4'
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    //noinspection Aligned16KB
+    implementation 'com.arthenica:ffmpeg-kit-min-gpl:6.0-2.LTS'
 }

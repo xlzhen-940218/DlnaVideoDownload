@@ -1,6 +1,6 @@
 package com.xlzhen.dlnavideodownload.service;
 
-import static com.arthenica.mobileffmpeg.Config.RETURN_CODE_SUCCESS;
+
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Icon;
@@ -25,8 +26,8 @@ import android.webkit.MimeTypeMap;
 
 import androidx.core.content.FileProvider;
 
-import com.arthenica.mobileffmpeg.ExecuteCallback;
-import com.arthenica.mobileffmpeg.FFmpeg;
+import com.arthenica.ffmpegkit.FFmpegKit;
+import com.arthenica.ffmpegkit.ReturnCode;
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
@@ -109,7 +110,11 @@ public class DlnaService extends BaseService {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
 
-        startForeground(1, notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC | ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE);
+        } else {
+            startForeground(1, notification);
+        }
     }
 
     private void updateNotification(String contentText, String contentTitle, int total, int current) {
@@ -133,7 +138,11 @@ public class DlnaService extends BaseService {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
 
-        startForeground(1, notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC | ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE);
+        } else {
+            startForeground(1, notification);
+        }
     }
 
     public static boolean isRuning() {
@@ -143,30 +152,42 @@ public class DlnaService extends BaseService {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         dlnaService = this;
+        createNotification(getString(R.string.receiver_video_dlna), getString(R.string.app_name), MainActivity.class);
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 InetAddress deviceAddress = NetWorkUtils.getWifiInetAddress(DlnaService.this);
-                hostName = deviceAddress.getHostName();
-                hostAddress = deviceAddress.getHostAddress();
+                if (deviceAddress != null) {
+                    hostName = deviceAddress.getHostName();
+                    hostAddress = deviceAddress.getHostAddress();
+                }
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        getApplicationContext().bindService(
+                                new Intent(DlnaService.this, AndroidUpnpServiceImpl.class), serviceConnection
+                                , Context.BIND_AUTO_CREATE);
+                    }
+                });
             }
         }).start();
-
-
-        getApplicationContext().bindService(
-                new Intent(this, AndroidUpnpServiceImpl.class), serviceConnection
-                , Context.BIND_AUTO_CREATE);
 
         M3U8Downloader.getInstance().setOnM3U8DownloadListener(new OnM3U8DownloadListener() {
             @Override
             public void onDownloadSuccess(M3U8Task task) {
                 super.onDownloadSuccess(task);
                 Log.v("success", task.getM3U8().getM3u8FilePath());
-                String path = String.format("%s/Download/%s.%s", Environment.getExternalStorageDirectory().getAbsolutePath()
-                        , m3u8VideoNameMap.get(task.getUrl()), "mp4");
-                FFmpeg.executeAsync(String.format("-i %s -codec copy %s", task.getM3U8().getM3u8FilePath()
-                        , path), (executionId, returnCode) -> {
-                    if (returnCode == RETURN_CODE_SUCCESS) {
+                File downloadDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                if (downloadDir != null && !downloadDir.exists()) {
+                    downloadDir.mkdirs();
+                }
+                String path = new File(downloadDir, m3u8VideoNameMap.get(task.getUrl()) + ".mp4").getAbsolutePath();
+                FFmpegKit.executeAsync(String.format("-i \"%s\" -codec copy \"%s\"", task.getM3U8().getM3u8FilePath()
+                        , path), session -> {
+                    ReturnCode returnCode = session.getReturnCode();
+                    if (ReturnCode.isSuccess(returnCode)) {
                         deleteRecursive(new File(task.getM3U8().getDirFilePath()));
                         completeNotification(path);
                         mediaScannerConnection.scanFile(path, getFileType(path));
@@ -184,17 +205,17 @@ public class DlnaService extends BaseService {
                 updateNotification(m3u8VideoNameMap.get(task.getUrl()), "M3U8 Downloading...", 100, (int) (task.getProgress() * 100));
             }
         });
-        createNotification(getString(R.string.receiver_video_dlna), getString(R.string.app_name), MainActivity.class);
 
         return super.onStartCommand(intent, flags, startId);
     }
     private String getFileType(String path) {
         try {
-            return MimeTypeUtils.getMimeType(path.substring(path.lastIndexOf(".") + 1));
+            String mime = MimeTypeUtils.getMimeType(path.substring(path.lastIndexOf(".") + 1));
+            return mime != null ? mime : "video/*";
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        return null;
+        return "video/*";
     }
     private void deleteRecursive(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())
@@ -216,8 +237,11 @@ public class DlnaService extends BaseService {
                     , hostAddress, byteBuffer.array(), (url, name1, type) -> new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
-                    String path = String.format("%s/Download/%s.%s", Environment.getExternalStorageDirectory().getAbsolutePath()
-                            , name1, MimeTypeMap.getFileExtensionFromUrl(url));
+                    File downloadDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);
+                    if (downloadDir != null && !downloadDir.exists()) {
+                        downloadDir.mkdirs();
+                    }
+                    String path = new File(downloadDir, name1 + "." + MimeTypeMap.getFileExtensionFromUrl(url)).getAbsolutePath();
 
                     if (MimeTypeMap.getFileExtensionFromUrl(url).equals("m3u8")) {
                         m3u8VideoNameMap.put(url, name1);
@@ -304,9 +328,12 @@ public class DlnaService extends BaseService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             builder.setLargeIcon(Icon.createWithResource(getApplicationContext(), R.mipmap.ic_launcher));
         }
-        Intent intent = new Intent(Intent.ACTION_VIEW, FileProvider.getUriForFile(getApplicationContext()
-                , getApplicationContext().getPackageName() + ".provider", new File(path)));
+        Uri uri = FileProvider.getUriForFile(getApplicationContext()
+                , getApplicationContext().getPackageName() + ".provider", new File(path));
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setDataAndType(uri, getFileType(path));
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         builder.setContentIntent(PendingIntent.getActivity(
                 getApplicationContext(),
                 1,
@@ -319,7 +346,11 @@ public class DlnaService extends BaseService {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notification.flags |= Notification.FLAG_FOREGROUND_SERVICE;
 
-        startForeground(1, notification);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC | ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE);
+        } else {
+            startForeground(1, notification);
+        }
     }
 
     @Override

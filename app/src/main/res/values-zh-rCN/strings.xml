@@ -7,6 +7,21 @@
     <string name="thank_opensource">\t感谢以下开源项目:\n
         \t\t1.<a href="https://github.com/lingochamp/FileDownloader"><b>https://github.com/lingochamp/FileDownloader</b></a>\n
         \t\t2.<a href="https://github.com/Jay-Goo/M3U8Downloader"><b>https://github.com/Jay-Goo/M3U8Downloader</b></a>\n
-        \t\t3.<a href="https://github.com/tanersener/mobile-ffmpeg"><b>https://github.com/tanersener/mobile-ffmpeg</b></a>\n\n</string>
+        \t\t3.<a href="https://github.com/arthenica/ffmpeg-kit"><b>https://github.com/arthenica/ffmpeg-kit</b></a>\n\n</string>
     <string name="support_content">支持常用的视频格式，例如mp4,mkv的投屏下载,还支持m3u8的下载以及下载完成后自动转换成mp4</string>
+    <string name="dlna_status">DLNA 状态</string>
+    <string name="status_stopped">已停止</string>
+    <string name="status_running">运行中</string>
+    <string name="network_info">网络信息</string>
+    <string name="ip_address_placeholder">IP: --.--.--.--</string>
+    <string name="about_title">关于</string>
+    <string name="ip_address_format">IP: %1$s</string>
+    <string name="history_title">下载历史</string>
+    <string name="play_video">播放视频</string>
+    <string name="save_to_downloads">保存到下载目录</string>
+    <string name="no_history">暂无下载记录</string>
+    <string name="save_success">已成功保存到系统下载目录</string>
+    <string name="save_failed">保存失败</string>
+    <string name="video_size">大小: %1$s</string>
+    <string name="video_date">日期: %1$s</string>
 </resources>

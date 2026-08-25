@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="status_running">#D0BCFF</color> <!-- md_theme_dark_primary -->
+    <color name="status_error">#F2B8B5</color>   <!-- md_theme_dark_error -->
+</resources>

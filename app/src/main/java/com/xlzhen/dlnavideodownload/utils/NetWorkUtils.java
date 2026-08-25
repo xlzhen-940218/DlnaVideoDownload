@@ -13,23 +13,23 @@ public class NetWorkUtils {
 
     public static InetAddress getWifiInetAddress(Context context) {
         try {
-            WifiManager wifiManager = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            int ipAddress = wifiInfo.getIpAddress();
-
-            InetAddress inetAddress;
-            try {
-                inetAddress = InetAddress.getByName(String.format("%d.%d.%d.%d",
-                        (ipAddress & 0xff), (ipAddress >> 8 & 0xff), (ipAddress >> 16 & 0xff),
-                        (ipAddress >> 24 & 0xff)));
-                return inetAddress;
-            }catch (Exception ex){
-                ex.printStackTrace();
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
+                NetworkInterface intf = en.nextElement();
+                // Filter out loopback, virtual interfaces, and those that are down
+                if (intf.isLoopback() || !intf.isUp() || intf.getName().contains("p2p") || intf.getName().contains("tun")) {
+                    continue;
+                }
+                for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements(); ) {
+                    InetAddress inetAddress = enumIpAddr.nextElement();
+                    if (!inetAddress.isLoopbackAddress() && !inetAddress.isLinkLocalAddress() && inetAddress instanceof java.net.Inet4Address) {
+                        return inetAddress;
+                    }
+                }
             }
         } catch (Exception e) {
-            return (null);
+            e.printStackTrace();
         }
-        return (null);
+        return null;
     }
 
     public static InetAddress getLocalIpV6() {

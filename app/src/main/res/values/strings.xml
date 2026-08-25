@@ -6,6 +6,21 @@
     <string name="thank_opensource">\tThanks for opensource:\n
         \t\t1.<a href="https://github.com/lingochamp/FileDownloader"><b>https://github.com/lingochamp/FileDownloader</b></a>\n
         \t\t2.<a href="https://github.com/Jay-Goo/M3U8Downloader"><b>https://github.com/Jay-Goo/M3U8Downloader</b></a>\n
-        \t\t3.<a href="https://github.com/tanersener/mobile-ffmpeg"><b>https://github.com/tanersener/mobile-ffmpeg</b></a>\n\n</string>
+        \t\t3.<a href="https://github.com/arthenica/ffmpeg-kit"><b>https://github.com/arthenica/ffmpeg-kit</b></a>\n\n</string>
     <string name="support_content">Supports commonly used video formats, such as mp4, mkv screencast download, also supports m3u8 download and automatically converts to mp4 after downloading</string>
+    <string name="dlna_status">DLNA Status</string>
+    <string name="status_stopped">Stopped</string>
+    <string name="status_running">Running</string>
+    <string name="network_info">Network Information</string>
+    <string name="ip_address_placeholder">IP: --.--.--.--</string>
+    <string name="about_title">About</string>
+    <string name="ip_address_format">IP: %1$s</string>
+    <string name="history_title">Download History</string>
+    <string name="play_video">Play Video</string>
+    <string name="save_to_downloads">Save to Downloads</string>
+    <string name="no_history">No download history found</string>
+    <string name="save_success">Saved to system Download directory</string>
+    <string name="save_failed">Failed to save file</string>
+    <string name="video_size">Size: %1$s</string>
+    <string name="video_date">Date: %1$s</string>
 </resources>
