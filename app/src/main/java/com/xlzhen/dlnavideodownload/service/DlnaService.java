@@ -13,6 +13,9 @@ import android.content.ServiceConnection;
 import android.content.pm.ServiceInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
@@ -34,6 +37,7 @@ import com.liulishuo.filedownloader.FileDownloader;
 import com.xlzhen.dlnavideodownload.MainActivity;
 import com.xlzhen.dlnavideodownload.R;
 
+import androidx.core.content.ContextCompat;
 import com.xlzhen.dlnavideodownload.service.base.BaseService;
 import com.xlzhen.dlnavideodownload.utils.MimeTypeUtils;
 import com.xlzhen.dlnavideodownload.utils.NetWorkUtils;
@@ -43,6 +47,7 @@ import org.fourthline.cling.android.AndroidUpnpService;
 import org.fourthline.cling.android.AndroidUpnpServiceImpl;
 
 import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.net.InetAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
@@ -230,11 +235,31 @@ public class DlnaService extends BaseService {
         public void onServiceConnected(ComponentName name, IBinder service) {
             upnpService = (AndroidUpnpService) service;
 
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-            ByteBuffer byteBuffer = ByteBuffer.allocate(bitmap.getByteCount());
-            bitmap.copyPixelsFromBuffer(byteBuffer);
+            byte[] iconData = new byte[0];
+            try {
+                Drawable drawable = ContextCompat.getDrawable(DlnaService.this, R.mipmap.ic_launcher);
+                if (drawable != null) {
+                    Bitmap bitmap;
+                    if (drawable instanceof BitmapDrawable) {
+                        bitmap = ((BitmapDrawable) drawable).getBitmap();
+                    } else {
+                        int width = drawable.getIntrinsicWidth() > 0 ? drawable.getIntrinsicWidth() : 48;
+                        int height = drawable.getIntrinsicHeight() > 0 ? drawable.getIntrinsicHeight() : 48;
+                        bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                        Canvas canvas = new Canvas(bitmap);
+                        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+                        drawable.draw(canvas);
+                    }
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    iconData = stream.toByteArray();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             ZxtMediaRenderer mediaRenderer = new ZxtMediaRenderer(Build.MODEL, Build.MANUFACTURER, hostName
-                    , hostAddress, byteBuffer.array(), (url, name1, type) -> new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    , hostAddress, iconData, (url, name1, type) -> new Handler(Looper.getMainLooper()).post(new Runnable() {
                 @Override
                 public void run() {
                     File downloadDir = getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS);

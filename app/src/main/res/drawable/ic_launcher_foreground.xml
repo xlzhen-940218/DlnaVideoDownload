@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Center of canvas is 54, 54 -->
+
+    <!-- TV Screen Outer (Main Body) -->
+    <path
+        android:fillColor="#6750A4"
+        android:pathData="M29,36h50c2.2,0 4,1.8 4,4v30c0,2.2 -1.8,4 -4,4h-50c-2.2,0 -4,-1.8 -4,-4v-30c0,-2.2 1.8,-4 4,-4z" />
+
+    <!-- Inner White Screen -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M33,40h42v22h-42z" />
+
+    <!-- Play Icon (Center-Left of Screen) -->
+    <path
+        android:fillColor="#6750A4"
+        android:pathData="M44,45l10,6l-10,6z" />
+
+    <!-- Download Arrow (Bottom-Right INSIDE White Screen) -->
+    <path
+        android:fillColor="#6750A4"
+        android:pathData="M66,54l3,3l3,-3l-1.5,0l0,-3l-3,0l0,3l-1.5,0z M64,58h8v2h-8z" />
+
+    <!-- Monitor Stand -->
+    <path
+        android:fillColor="#6750A4"
+        android:pathData="M49,74h10v2h-10z M53,70h2v4h-2z" />
+</vector>

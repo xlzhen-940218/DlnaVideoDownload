@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Monochrome icon with simplified paths for consistent appearance -->
+    <path
+        android:fillColor="#000000"
+        android:pathData="M29,36h50c2.2,0 4,1.8 4,4v30c0,2.2 -1.8,4 -4,4h-50c-2.2,0 -4,-1.8 -4,-4v-30c0,-2.2 1.8,-4 4,-4z M33,40v22h42v-22h-42z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M44,45l10,6l-10,6z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M66,54l3,3l3,-3l-1.5,0l0,-3l-3,0l0,3z M64,58h8v2h-8z" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M49,74h10v2h-10z M53,70h2v4h-2z" />
+</vector>
