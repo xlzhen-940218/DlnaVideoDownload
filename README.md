@@ -13,6 +13,12 @@ A powerful Android tool for intercepting and downloading screencast videos. It t
 *   **H5 Player**: Embedded HTML5 video player for instant preview without leaving the app.
 *   **One-tap Export**: Save downloaded videos from private storage to the system's "Download" directory for easy access in the Gallery.
 
+## 📸 Screenshots
+
+| Home Page | History Page |
+| :---: | :---: |
+| ![Home Page](./home-page.webp) | ![History Page](./history-page.webp) |
+
 ## 🚀 Modern Android Support
 
 *   **Android 16 (API 37) Ready**: Fully compliant with the latest Android policies, including Foreground Service type declarations and granular permission management.
